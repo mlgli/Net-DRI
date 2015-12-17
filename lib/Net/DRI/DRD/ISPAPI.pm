@@ -86,13 +86,13 @@ sub new
 {
  my $class=shift;
  my $self=$class->SUPER::new(@_);
- $self->{info}->{host_as_attr}=0;
+ #$self->{info}->{host_as_attr}=0;
 
  bless($self,$class);
  return $self;
 }
 
-sub periods  { return (map { DateTime::Duration->new(years => $_) } (1..10)), (map { DateTime::Duration->new(months => $_) } (1..12)); }
+sub periods  { return (map { DateTime::Duration->new(months => $_) } (1..12)), (map { DateTime::Duration->new(years => $_) } (1..10)); }
 sub name { return 'ISPAPI'; }
 sub tlds { return qw/com net org aero asia biz info jobs mobi name pro tel travel at be ca ch cz de dk es eu fr hk im in it jp lt lu mx nl nu pl pt re ru se sg tk me.uk co.uk org.uk us/; }
 sub object_types { return ('domain','contact','ns'); }
@@ -119,6 +119,13 @@ sub account_list_domains
  my ($self,$ndr,$hash)=@_;
  my $rc=$ndr->try_restore_from_cache('account','domains','list') if !$hash;
  if (! defined $rc) { $rc=$ndr->process('account','list_domains', [$hash]); }
+ return $rc;
+}
+
+sub message_retrieve
+{
+ my ($self,$ndr,$id)=@_;
+ my $rc=$ndr->process('message','ispapiretrieve',[$id]);
  return $rc;
 }
 
