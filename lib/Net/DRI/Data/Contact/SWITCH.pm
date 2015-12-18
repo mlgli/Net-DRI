@@ -25,7 +25,8 @@ use base qw/Net::DRI::Data::Contact/;
 use Net::DRI::Exception;
 use Net::DRI::Util;
 use Email::Valid;
-
+use Sys::Syslog;
+use Data::Dumper;
 our $VERSION=do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf("%d".".%02d" x $#r, @r); };
 
 =pod
@@ -79,9 +80,8 @@ sub validate
  my @errs;
 
  if (!$change)
- {
-   Net::DRI::Exception::usererr_insufficient_parameters('Invalid contact information: name/city/cc/email/srid mandatory') unless (scalar(($self->name())[1]) && scalar(($self->city())[1]) && scalar(($self->cc())[1]) && $self->email() && $self->srid());
-
+ { 
+  #Net::DRI::Exception::usererr_insufficient_parameters('Invalid contact information: name/city/cc/email/srid mandatory') unless (scalar(($self->name())[1]) && scalar(($self->city())[1]) && scalar(($self->cc())[1]) && $self->email() && $self->srid());
   push @errs,'srid' unless Net::DRI::Util::xml_is_token($self->srid(),3,16);
  }
 
